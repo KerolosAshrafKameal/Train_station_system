@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* ── ENR Custom Theme ── */
+:root {
+  --navy-950: #1c1917;
+  --navy-900: #0d1326;
+  --navy-800: #292524;
+  --navy-700: #44403c;
+  --navy-600: #243059;
+  --gold-500: #d97706;
+  --gold-400: #f59e0b;
+  --gold-300: #f0d078;
+  --gold-200: #f5e0a0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--navy-950);
+  color: #f5f5f4;
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--navy-900); }
+::-webkit-scrollbar-thumb { background: var(--navy-600); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-500); }
