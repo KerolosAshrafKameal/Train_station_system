@@ -7,13 +7,17 @@ const links = [
   { to: '/my-bookings',label: '📜 History' },
 ];
 
-export default function Navbar() {
+export default function Navbar({ onLogout }: { onLogout?: () => void }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('enr_auth');
-    window.location.href = '/login'; // Force reload to clear state and hit App.tsx logic
+    if (onLogout) {
+      onLogout();
+    } else {
+      localStorage.removeItem('enr_auth');
+      navigate('/login');
+    }
   };
 
   return (

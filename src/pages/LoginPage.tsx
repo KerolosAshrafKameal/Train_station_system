@@ -290,7 +290,15 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
                 <input type="checkbox" style={{ marginRight: '8px', accentColor: '#d97706', width: '16px', height: '16px' }} />
                 Remember me
               </label>
-              <span style={{ fontSize: '14px', color: '#d97706', cursor: 'pointer', fontWeight: 600 }}>
+              <span 
+                onClick={() => {
+                  if(!email) {
+                    setError('Please enter your email address first to reset password.');
+                  } else {
+                    setError(`Password reset instructions have been sent to ${email}`);
+                  }
+                }}
+                style={{ fontSize: '14px', color: '#d97706', cursor: 'pointer', fontWeight: 600 }}>
                 Forgot password?
               </span>
             </div>

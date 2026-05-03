@@ -36,7 +36,7 @@ export default function App() {
         ) : (
           <>
             {/* Pass handleLogout to Navbar if you want a logout button there later, but for now we just show it */}
-            <Navbar />
+            <Navbar onLogout={handleLogout} />
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/trains" element={<TrainsPage />} />
