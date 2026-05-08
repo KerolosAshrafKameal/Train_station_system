@@ -122,7 +122,10 @@ export default function TrainsPage() {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: 60, color: '#8C6B6B' }}>Loading trains...</div>
+        <div className="fullscreen-loading">
+          <div className="train-loader"></div>
+          <div className="fullscreen-loading__text">Loading Schedules...</div>
+        </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 6px' }}>

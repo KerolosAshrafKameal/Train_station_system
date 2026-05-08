@@ -321,7 +321,12 @@ export default function PreBookPage() {
       <h1 style={{ fontSize: 22, fontWeight: 800, color: '#8B1A1A', marginBottom: 4 }}>{editId ? 'Edit Pre-Booking' : 'Pre-Book Ticket'}</h1>
       <p style={{ color: '#8C6B6B', marginBottom: 24, fontSize: 13.5 }}>{editId ? `Updating details for booking ${editId}.` : 'Reserve a seat before visiting the station. Booking valid for 5 hours.'}</p>
 
-      {loading ? <div style={{ color: '#8C6B6B', textAlign: 'center', padding: 60 }}>Loading...</div> : (
+      {loading ? (
+        <div className="fullscreen-loading" style={{ minHeight: '40vh' }}>
+          <div className="train-loader"></div>
+          <div className="fullscreen-loading__text">Loading Details...</div>
+        </div>
+      ) : (
         <form onSubmit={handleSubmit} style={{
           background: '#FFFFFF',
           border: '1px solid #E8E0E0', borderRadius: 10, padding: 28,

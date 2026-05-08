@@ -882,13 +882,90 @@ body {
   background: var(--white);
 }
 
+/* ─── FULLSCREEN LOADING ─────────────────────────── */
+.fullscreen-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 16px;
+}
+
+.train-loader {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--enr-red-muted);
+  border-top-color: var(--enr-red);
+  border-radius: 50%;
+  animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+}
+
+.fullscreen-loading__text {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--enr-red);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* ─── BOTTOM NAV (MOBILE) ─────────────────────────── */
+.bottom-nav {
+  display: none;
+}
+
 /* ─── RESPONSIVE ──────────────────────────────────── */
 @media (max-width: 768px) {
   .sidebar { display: none; }
-  .main-content { margin-left: 0; }
+  .main-content { margin-left: 0; padding-bottom: 70px; }
   .page-body--split { grid-template-columns: 1fr; }
+  
   .action-cards { grid-template-columns: repeat(2, 1fr); }
+  .action-card:nth-child(2) { border-right: none; }
+  .action-card { border-bottom: 1px solid var(--border); }
+  
   .hero { height: 280px; }
   .hero__content { padding: 24px; }
   .hero__title { font-size: 24px; }
+  .top-nav { padding: 0 16px; }
+
+  /* Table responsive scrolling */
+  .enr-table { display: block; overflow-x: auto; white-space: nowrap; }
+
+  /* Form responsive */
+  .form-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 64px;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .bottom-nav__item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    color: var(--text-muted); text-decoration: none; font-size: 10px; font-weight: 600;
+    flex: 1; padding: 8px 0;
+  }
+  
+  .bottom-nav__item--active {
+    color: var(--enr-red);
+  }
+  
+  .bottom-nav__icon { font-size: 20px; }
 }

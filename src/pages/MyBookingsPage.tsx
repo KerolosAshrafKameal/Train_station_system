@@ -140,8 +140,9 @@ export default function MyBookingsPage() {
         <p style={{ color: '#8C6B6B', marginBottom: 24, fontSize: 13.5 }}>View all your past bookings, active pre-bookings, and issued tickets.</p>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 48, color: '#8C6B6B', fontSize: 14 }}>
-            Loading your history...
+          <div className="fullscreen-loading" style={{ minHeight: '50vh' }}>
+            <div className="train-loader"></div>
+            <div className="fullscreen-loading__text">Loading History...</div>
           </div>
         ) : error ? (
           <div style={{ background: 'rgba(139,26,26,0.07)', border: '1px solid rgba(139,26,26,0.25)', borderRadius: 8, padding: '11px 16px', color: '#8B1A1A', fontSize: 13.5, marginBottom: 16 }}>

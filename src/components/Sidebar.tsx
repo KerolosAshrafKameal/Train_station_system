@@ -15,7 +15,8 @@ export default function Sidebar({ onNewBooking }: SidebarProps) {
   const { pathname } = useLocation();
 
   return (
-    <aside className="sidebar">
+    <>
+      <aside className="sidebar">
       {/* ENR Portal branding block */}
       <div style={{
         padding: '0 16px 16px',
@@ -63,5 +64,24 @@ export default function Sidebar({ onNewBooking }: SidebarProps) {
       ))}
 
     </aside>
+      
+      {/* Mobile Bottom Navigation */}
+      <nav className="bottom-nav">
+        {SIDEBAR_ITEMS.map(item => (
+          <Link
+            key={item.to}
+            to={item.to}
+            className={`bottom-nav__item${
+              (item.to === '/' ? pathname === '/' : pathname.startsWith(item.to))
+                ? ' bottom-nav__item--active'
+                : ''
+            }`}
+          >
+            <span className="bottom-nav__icon">{item.icon}</span>
+            <span>{item.label}</span>
+          </Link>
+        ))}
+      </nav>
+    </>
   );
 }
