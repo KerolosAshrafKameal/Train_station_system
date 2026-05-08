@@ -116,23 +116,9 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
-      background: '#F8F8F8',
-    }}>
+    <div className="login-layout">
       {/* Left Hero Panel */}
-      <div style={{
-        flex: '1 1 55%',
-        position: 'relative',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-end',
-        padding: '48px',
-        minHeight: '100vh',
-      }}>
+      <div className="login-hero">
         <img
           src="/assets/hero-train.png"
           alt="ENR Train"
@@ -161,17 +147,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
       </div>
 
       {/* Right Form Panel */}
-      <div style={{
-        flex: '0 0 400px',
-        background: '#FFFFFF',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: '48px 40px',
-        boxShadow: '-4px 0 24px rgba(0,0,0,0.08)',
-        position: 'relative',
-        zIndex: 10,
-      }}>
+      <div className="login-form-panel">
         
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
