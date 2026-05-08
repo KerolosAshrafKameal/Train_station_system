@@ -156,7 +156,7 @@ export default function HomePage() {
         </div>
 
         {/* ── BODY: TABLE + LIVE STATUS ─────────────── */}
-        <div style={{ padding: '24px', display: 'grid', gridTemplateColumns: '1fr 260px', gap: 20, alignItems: 'start' }}>
+        <div className="page-body page-body--split">
 
           {/* Departures Table */}
           <div className="departures-card">

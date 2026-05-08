@@ -955,16 +955,25 @@ body {
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .main-content { margin-left: 0; padding-bottom: 70px; }
-  .page-body--split { grid-template-columns: 1fr; }
+  /* Layout Tweaks */
+  .page-body--split { grid-template-columns: 1fr; gap: 20px; }
   
   .action-cards { grid-template-columns: repeat(2, 1fr); }
+  .action-card { padding: 16px 12px; border-bottom: 1px solid var(--border); }
   .action-card:nth-child(2) { border-right: none; }
-  .action-card { border-bottom: 1px solid var(--border); }
   
   .hero { height: 280px; }
   .hero__content { padding: 24px; }
-  .hero__title { font-size: 24px; }
+  .hero__title { font-size: 20px; margin-bottom: 8px; }
+  .hero__desc { font-size: 12px; line-height: 1.5; }
   .top-nav { padding: 0 16px; }
+
+  /* Top Nav Tweaks */
+  .top-nav__brand-text strong { font-size: 12px; }
+  .top-nav__brand-text span { display: none; }
+  .top-nav__user span { display: none; }
+  .btn-hero-outline { display: none; } /* Hide secondary button to save space */
+  .btn-logout { padding: 5px 8px; font-size: 11px; }
 
   /* Table responsive scrolling */
   .enr-table { display: block; overflow-x: auto; white-space: nowrap; }
