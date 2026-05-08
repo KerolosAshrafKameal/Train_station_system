@@ -179,7 +179,7 @@ export function to12h(t: string): string {
   const clean = t.replace('+1', '');
   const [hStr, mStr] = clean.split(':');
   let h = parseInt(hStr);
-  const m = mStr;
+  const m = mStr || '00';
   const ampm = h >= 12 ? 'PM' : 'AM';
   if (h === 0) h = 12;
   else if (h > 12) h -= 12;

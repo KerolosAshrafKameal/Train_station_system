@@ -4,23 +4,26 @@ import { supabase } from '../lib/supabase';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  padding: '14px 16px 14px 44px',
-  borderRadius: '12px',
-  fontSize: '15px',
-  backgroundColor: 'rgba(28, 25, 23, 0.6)',
-  border: '1px solid rgba(148, 163, 184, 0.3)',
-  color: '#f5f5f4',
+  padding: '10px 14px 10px 42px',
+  borderRadius: '8px',
+  fontSize: '13.5px',
+  backgroundColor: '#FFFFFF',
+  border: '1.5px solid #E8E0E0',
+  color: '#1A0A0A',
   outline: 'none',
-  transition: 'border-color 0.2s',
-  boxSizing: 'border-box'
+  transition: 'border-color 0.15s',
+  boxSizing: 'border-box',
+  fontFamily: 'inherit',
 };
 
 const labelStyle: React.CSSProperties = {
   display: 'block',
-  fontSize: '14px',
-  fontWeight: 600,
-  color: '#d6d3d1',
-  marginBottom: '8px'
+  fontSize: '11px',
+  fontWeight: 700,
+  color: '#8C6B6B',
+  marginBottom: '5px',
+  letterSpacing: '0.06em',
+  textTransform: 'uppercase',
 };
 
 const iconStyle: React.CSSProperties = {
@@ -116,69 +119,80 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
     <div style={{
       minHeight: '100vh',
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundImage: `url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=2000&auto=format&fit=crop')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      position: 'relative',
-      padding: '20px',
-      fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif"
+      fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
+      background: '#F8F8F8',
     }}>
-      {/* Dark overlay */}
+      {/* Left Hero Panel */}
       <div style={{
-        position: 'absolute',
-        inset: 0,
-        backgroundColor: 'rgba(28, 25, 23, 0.75)',
-        backdropFilter: 'blur(4px)',
-        zIndex: 0
-      }} />
-      
-      {/* Login Card */}
+        flex: '1 1 55%',
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        padding: '48px',
+        minHeight: '100vh',
+      }}>
+        <img
+          src="/assets/hero-train.png"
+          alt="ENR Train"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(160deg, rgba(139,26,26,0.72) 0%, rgba(26,10,10,0.55) 100%)',
+        }} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 10,
+            background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)',
+            borderRadius: 30, padding: '6px 16px', marginBottom: 20,
+          }}>
+            <span style={{ fontSize: 20 }}>🚆</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.9)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Egyptian National Railways</span>
+          </div>
+          <h2 style={{ fontSize: 28, fontWeight: 900, color: '#FFFFFF', marginBottom: 10, lineHeight: 1.2 }}>
+            Smart Ticket Booking<br />System – Egypt
+          </h2>
+          <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13.5, maxWidth: 400, lineHeight: 1.65 }}>
+            Reserve your seat, manage your bookings, and travel with ease across Egypt's rail network.
+          </p>
+        </div>
+      </div>
+
+      {/* Right Form Panel */}
       <div style={{
-        width: '100%',
-        maxWidth: '420px',
-        backgroundColor: 'rgba(41, 37, 36, 0.85)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        borderRadius: '24px',
-        padding: '40px 32px',
-        border: '1px solid rgba(217, 119, 6, 0.3)',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(217, 119, 6, 0.1)',
+        flex: '0 0 400px',
+        background: '#FFFFFF',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        padding: '48px 40px',
+        boxShadow: '-4px 0 24px rgba(0,0,0,0.08)',
+        position: 'relative',
         zIndex: 10,
-        position: 'relative'
       }}>
         
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '72px',
-            height: '72px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #d97706, #f59e0b)',
-            boxShadow: '0 10px 25px rgba(217, 119, 6, 0.3)',
-            marginBottom: '20px'
+            width: '60px', height: '60px',
+            borderRadius: '14px',
+            background: '#8B1A1A',
+            marginBottom: '18px',
+            fontSize: '28px',
+          }}>🚆</div>
+          <h1 style={{
+            fontSize: '22px', fontWeight: 800,
+            margin: '0 0 6px 0', color: '#1A0A0A',
           }}>
-            <svg style={{ width: '36px', height: '36px', color: '#1c1917' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
-            </svg>
-          </div>
-          <h1 style={{ 
-            fontSize: '32px', 
-            fontWeight: 800, 
-            margin: '0 0 8px 0',
-            background: 'linear-gradient(to right, #f59e0b, #fff)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}>
-            {isRegistering ? 'Create Account' : 'Welcome to ENR'}
+            {isRegistering ? 'Create Account' : 'Welcome Back'}
           </h1>
-          <p style={{ color: '#a8a29e', fontSize: '15px', margin: 0 }}>
-            {isRegistering ? 'Register to start booking tickets' : 'Sign in to your passenger account'}
+          <p style={{ color: '#8C6B6B', fontSize: '13px', margin: 0 }}>
+            {isRegistering ? 'Register to start booking tickets' : 'Sign in to your ENR passenger account'}
           </p>
         </div>
 
@@ -197,8 +211,8 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
                   onChange={(e) => setName(e.target.value)}
                   style={inputStyle}
                   placeholder="John Doe"
-                  onFocus={(e) => e.target.style.borderColor = '#d97706'}
-                  onBlur={(e) => e.target.style.borderColor = 'rgba(148, 163, 184, 0.3)'}
+                  onFocus={(e) => e.target.style.borderColor = '#8B1A1A'}
+                  onBlur={(e) => e.target.style.borderColor = '#E8E0E0'}
                   required
                 />
               </div>
@@ -218,8 +232,8 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
                 onChange={(e) => setEmail(e.target.value)}
                 style={inputStyle}
                 placeholder="passenger@example.com"
-                onFocus={(e) => e.target.style.borderColor = '#d97706'}
-                onBlur={(e) => e.target.style.borderColor = 'rgba(148, 163, 184, 0.3)'}
+                onFocus={(e) => e.target.style.borderColor = '#8B1A1A'}
+                onBlur={(e) => e.target.style.borderColor = '#E8E0E0'}
                 required
               />
             </div>
@@ -238,8 +252,8 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
                 onChange={(e) => setPassword(e.target.value)}
                 style={{...inputStyle, paddingRight: '44px'}}
                 placeholder="••••••••"
-                onFocus={(e) => e.target.style.borderColor = '#d97706'}
-                onBlur={(e) => e.target.style.borderColor = 'rgba(148, 163, 184, 0.3)'}
+                onFocus={(e) => e.target.style.borderColor = '#8B1A1A'}
+                onBlur={(e) => e.target.style.borderColor = '#E8E0E0'}
                 required
               />
               {/* Eye icon to toggle password */}
@@ -267,16 +281,16 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
           {/* Error Message */}
           {error && (
             <div style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.1)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              borderRadius: '8px',
-              padding: '12px',
+              backgroundColor: 'rgba(139,26,26,0.07)',
+              border: '1px solid rgba(139,26,26,0.25)',
+              borderRadius: '7px',
+              padding: '10px 12px',
               display: 'flex',
               alignItems: 'center',
-              color: '#f87171',
-              fontSize: '14px'
+              color: '#8B1A1A',
+              fontSize: '13px',
             }}>
-              <svg style={{ width: '20px', height: '20px', marginRight: '8px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg style={{ width: '16px', height: '16px', marginRight: '8px', flexShrink: 0 }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               {error}
@@ -287,7 +301,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
           {!isRegistering && (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '-4px' }}>
               <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', fontSize: '14px', color: '#a8a29e' }}>
-                <input type="checkbox" style={{ marginRight: '8px', accentColor: '#d97706', width: '16px', height: '16px' }} />
+                <input type="checkbox" style={{ marginRight: '8px', accentColor: '#8B1A1A', width: '16px', height: '16px' }} />
                 Remember me
               </label>
               <span 
@@ -298,7 +312,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
                     setError(`Password reset instructions have been sent to ${email}`);
                   }
                 }}
-                style={{ fontSize: '14px', color: '#d97706', cursor: 'pointer', fontWeight: 600 }}>
+                style={{ fontSize: '13px', color: '#8B1A1A', cursor: 'pointer', fontWeight: 600 }}>
                 Forgot password?
               </span>
             </div>
@@ -310,33 +324,33 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
             disabled={isLoading}
             style={{
               width: '100%',
-              padding: '16px',
-              borderRadius: '12px',
+              padding: '11px',
+              borderRadius: '8px',
               border: 'none',
-              background: 'linear-gradient(135deg, #d97706, #f59e0b)',
-              color: '#1c1917',
-              fontSize: '16px',
+              background: '#8B1A1A',
+              color: '#FFFFFF',
+              fontSize: '13px',
               fontWeight: 700,
               cursor: isLoading ? 'not-allowed' : 'pointer',
               marginTop: '8px',
-              boxShadow: '0 8px 16px rgba(217, 119, 6, 0.2)',
-              opacity: isLoading ? 0.8 : 1,
-              transition: 'transform 0.1s'
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              opacity: isLoading ? 0.7 : 1,
+              transition: 'background 0.15s'
             }}
-            onMouseDown={(e) => { if(!isLoading) e.currentTarget.style.transform = 'scale(0.98)'; }}
-            onMouseUp={(e) => { if(!isLoading) e.currentTarget.style.transform = 'scale(1)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+            onMouseEnter={(e) => { if(!isLoading) e.currentTarget.style.background = '#A52020'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = '#8B1A1A'; }}
           >
             {isLoading ? 'Authenticating...' : (isRegistering ? 'Create Account' : 'Sign In')}
           </button>
         </form>
         
         {/* Footer */}
-        <div style={{ marginTop: '32px', textAlign: 'center', borderTop: '1px solid rgba(148, 163, 184, 0.2)', paddingTop: '24px' }}>
-          <p style={{ fontSize: '14px', color: '#a8a29e', margin: 0 }}>
+        <div style={{ marginTop: '24px', textAlign: 'center', borderTop: '1px solid #F0EAEA', paddingTop: '20px' }}>
+          <p style={{ fontSize: '13px', color: '#8C6B6B', margin: 0 }}>
             {isRegistering ? 'Already have an account? ' : "Don't have an account? "}
-            <span 
-              style={{ color: '#d97706', fontWeight: 700, cursor: 'pointer' }}
+            <span
+              style={{ color: '#8B1A1A', fontWeight: 700, cursor: 'pointer' }}
               onClick={() => {
                 setIsRegistering(!isRegistering);
                 setError('');

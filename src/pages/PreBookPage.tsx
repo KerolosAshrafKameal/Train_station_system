@@ -7,25 +7,27 @@ import {
   stopsForType, calcPrice, priorityRank, priorityLabel, priorityColor,
   fmtBookingId, to12h,
 } from '../lib/helpers';
+import Sidebar from '../components/Sidebar';
 
-/* ── styles ── */
+/* ── ENR red/white styles ── */
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '12px 16px', borderRadius: 12, fontSize: 14,
-  background: '#44403c', border: '1px solid rgba(217,119,6,0.25)', color: '#f5f5f4',
+  width: '100%', padding: '9px 13px', borderRadius: 7, fontSize: 13.5,
+  background: '#FFFFFF', border: '1.5px solid #E8E0E0', color: '#1A0A0A',
+  fontFamily: 'inherit', outline: 'none',
 };
-const labelStyle: React.CSSProperties = { fontSize: 13, fontWeight: 600, color: '#a8a29e', display: 'block', marginBottom: 6 };
-const radioRow: React.CSSProperties = { display: 'flex', gap: 12, marginTop: 4 };
+const labelStyle: React.CSSProperties = { fontSize: 11, fontWeight: 700, color: '#8C6B6B', display: 'block', marginBottom: 5, letterSpacing: '0.06em', textTransform: 'uppercase' };
+const radioRow: React.CSSProperties = { display: 'flex', gap: 8, marginTop: 4, flexWrap: 'wrap' };
 const radioLabel: (active: boolean) => React.CSSProperties = (active) => ({
-  padding: '10px 20px', borderRadius: 10, cursor: 'pointer', fontWeight: 600, fontSize: 13,
-  background: active ? '#d97706' : 'rgba(217,119,6,0.08)',
-  color: active ? '#1c1917' : '#d6d3d1',
-  border: `1px solid ${active ? '#d97706' : 'rgba(217,119,6,0.2)'}`,
-  transition: 'all .2s',
+  padding: '7px 16px', borderRadius: 7, cursor: 'pointer', fontWeight: 600, fontSize: 12,
+  background: active ? '#8B1A1A' : 'rgba(139,26,26,0.07)',
+  color: active ? '#FFFFFF' : '#5C3D3D',
+  border: `1px solid ${active ? '#8B1A1A' : '#E8E0E0'}`,
+  transition: 'all .15s', userSelect: 'none',
 });
 const goldBtn: React.CSSProperties = {
-  padding: '14px 32px', borderRadius: 12, border: 'none', fontWeight: 700, cursor: 'pointer',
-  background: 'linear-gradient(135deg, #d97706, #f59e0b)', color: '#1c1917', fontSize: 15,
-  width: '100%', marginTop: 8, transition: 'transform .15s',
+  padding: '11px 24px', borderRadius: 7, border: 'none', fontWeight: 700, cursor: 'pointer',
+  background: '#8B1A1A', color: '#FFFFFF', fontSize: 13,
+  width: '100%', marginTop: 8, transition: 'background .15s', letterSpacing: '0.04em',
 };
 
 type Result = {
@@ -44,7 +46,7 @@ export default function PreBookPage() {
   const editId = searchParams.get('edit');
 
   /* form */
-  const [name, setName] = useState('');
+  const [name, setName] = useState(localStorage.getItem('enr_user_name') || '');
   const [ssn, setSsn] = useState('');
   const [futureDate, setFutureDate] = useState('');
   const [trainId, setTrainId] = useState<number>(0);
@@ -200,6 +202,18 @@ export default function PreBookPage() {
           class_type: cls,
           status: 'pending',         
         });
+        
+        // Save to localStorage so MyBookingsPage can find it even if the name differs
+        const myBookingsStr = localStorage.getItem('my_booking_ids') || '[]';
+        try {
+          const myBookings = JSON.parse(myBookingsStr);
+          if (!myBookings.includes(bookingId)) {
+            myBookings.push(bookingId);
+            localStorage.setItem('my_booking_ids', JSON.stringify(myBookings));
+          }
+        } catch (e) {
+          localStorage.setItem('my_booking_ids', JSON.stringify([bookingId]));
+        }
       }
 
       setResult({
@@ -223,17 +237,18 @@ export default function PreBookPage() {
     return (
       <div style={{ maxWidth: 560, margin: '60px auto', padding: '0 24px' }}>
         <div style={{
-          background: 'linear-gradient(135deg, rgba(68,64,60,0.9), rgba(41,37,36,0.95))',
+          background: '#FFFFFF',
           border: '2px solid #ef4444', borderRadius: 20, padding: 36, textAlign: 'center',
+          boxShadow: '0 4px 24px rgba(0,0,0,0.06)'
         }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>⚠️</div>
           <h2 style={{ fontSize: 24, fontWeight: 800, color: '#ef4444', marginBottom: 8 }}>Train is Full</h2>
-          <p style={{ color: '#a8a29e', marginBottom: 24 }}>There are no seats available for the selected class on this train.</p>
+          <p style={{ color: '#8C6B6B', marginBottom: 24 }}>There are no seats available for the selected class on this train.</p>
           <div style={{ background: 'rgba(239,68,68,0.1)', padding: 16, borderRadius: 12, marginBottom: 24 }}>
-            <p style={{ color: '#fca5a5', fontSize: 14 }}>You can join the <strong>Waitlist</strong>. We will secure your spot in the queue, but a seat is <strong>NOT guaranteed</strong> unless there are cancellations at the station.</p>
+            <p style={{ color: '#dc2626', fontSize: 14 }}>You can join the <strong>Waitlist</strong>. We will secure your spot in the queue, but a seat is <strong>NOT guaranteed</strong> unless there are cancellations at the station.</p>
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
-            <button onClick={() => setShowWaitlistPrompt(false)} style={{ ...goldBtn, background: 'transparent', border: '1px solid #78716c', color: '#d6d3d1' }}>Cancel</button>
+            <button onClick={() => setShowWaitlistPrompt(false)} style={{ ...goldBtn, background: 'transparent', border: '1px solid #E8E0E0', color: '#5C3D3D' }}>Cancel</button>
             <button onClick={(e) => handleSubmit(e, true)} style={{ ...goldBtn, background: '#ef4444', color: '#fff' }}>Join Waitlist</button>
           </div>
         </div>
@@ -245,18 +260,19 @@ export default function PreBookPage() {
     return (
       <div style={{ maxWidth: 560, margin: '60px auto', padding: '0 24px' }}>
         <div style={{
-          background: 'linear-gradient(135deg, rgba(68,64,60,0.9), rgba(41,37,36,0.95))',
-          border: `2px solid ${isWaitlist ? '#f97316' : '#d97706'}`, borderRadius: 20, padding: 36, textAlign: 'center',
+          background: '#FFFFFF',
+          border: `2px solid ${isWaitlist ? '#f97316' : '#8B1A1A'}`, borderRadius: 20, padding: 36, textAlign: 'center',
+          boxShadow: '0 4px 24px rgba(0,0,0,0.06)'
         }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>{isWaitlist ? '⏳' : '✅'}</div>
-          <h2 style={{ fontSize: 24, fontWeight: 800, color: isWaitlist ? '#f97316' : '#d97706', marginBottom: 8 }}>
-            {isWaitlist ? 'Added to Waitlist!' : 'Booking Confirmed!'}
+          <h2 style={{ fontSize: 24, fontWeight: 800, color: isWaitlist ? '#f97316' : '#8B1A1A', marginBottom: 8 }}>
+            {isWaitlist ? 'Added to Waitlist!' : (editId ? 'Booking Updated!' : 'Booking Confirmed!')}
           </h2>
-          <p style={{ color: '#a8a29e', marginBottom: 24 }}>
-            {isWaitlist ? 'You are on the waitlist. Proceed to the station for standby.' : 'Your pre-booking has been registered successfully.'}
+          <p style={{ color: '#8C6B6B', marginBottom: 24 }}>
+            {isWaitlist ? 'You are on the waitlist. Proceed to the station for standby.' : 'Your pre-booking has been saved successfully.'}
           </p>
 
-          <div style={{ background: 'rgba(217,119,6,0.08)', borderRadius: 14, padding: 20, textAlign: 'left', marginBottom: 20 }}>
+          <div style={{ background: 'rgba(139,26,26,0.06)', borderRadius: 14, padding: 20, textAlign: 'left', marginBottom: 20 }}>
             {([
               ['Booking ID', result.bookingId],
               ['Passenger', result.name],
@@ -267,25 +283,28 @@ export default function PreBookPage() {
               ['Price', `${result.price.toFixed(2)} EGP`],
               ['Booking Time', new Date().toLocaleString('en-EG', { timeZone: 'Africa/Cairo' })]
             ] as [string,string][]).map(([k,v]) => (
-              <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                <span style={{ fontSize: 13, color: '#78716c' }}>{k}</span>
-                <span style={{ fontSize: 14, fontWeight: 600, color: '#f5f5f4' }}>{v}</span>
+              <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #E8E0E0' }}>
+                <span style={{ fontSize: 13, color: '#8C6B6B' }}>{k}</span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: '#1A0A0A' }}>{v}</span>
               </div>
             ))}
           </div>
 
-          <div style={{ fontSize: 13, color: '#f59e0b', marginBottom: 20 }}>
+          <div style={{ fontSize: 13, color: '#f59e0b', marginBottom: 20, fontWeight: 600 }}>
             ⏰ Expires at: {new Date(result.expiresAt).toLocaleString('en-EG', { timeZone: 'Africa/Cairo' })}
+            <div style={{ marginTop: 8, fontSize: 14, color: '#dc2626', padding: '10px', background: 'rgba(220,38,38,0.1)', borderRadius: 8, border: '1px solid rgba(220,38,38,0.2)' }}>
+              <strong>⚠️ IMPORTANT:</strong> This Pre-Booking is valid for <strong>5 HOURS ONLY</strong>. You must go to the station and book your ticket before it expires.
+            </div>
           </div>
 
           <div style={{
             background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.3)',
-            borderRadius: 12, padding: 16, fontSize: 14, color: '#93c5fd', lineHeight: 1.5,
+            borderRadius: 12, padding: 16, fontSize: 14, color: '#1d4ed8', lineHeight: 1.5,
           }}>
-            📍 Please go to <strong>Admin 2 counter</strong> at the station with your Booking ID: <strong>{result.bookingId}</strong>
+            📍 Please go to <strong>Admin 2 counter</strong> at the station with your Booking ID: <strong>{result.bookingId}</strong> to approve and issue your ticket.
           </div>
 
-          <button onClick={() => { setResult(null); setName(''); setSsn(''); setCls(''); setTrainId(0); setFromId(0); setToId(0); }}
+          <button onClick={() => { setResult(null); setName(localStorage.getItem('enr_user_name') || ''); setSsn(''); setCls(''); setTrainId(0); setFromId(0); setToId(0); }}
             style={{ ...goldBtn, marginTop: 24 }}>
             Book Another Ticket
           </button>
@@ -295,14 +314,17 @@ export default function PreBookPage() {
   }
 
   return (
-    <div style={{ maxWidth: 640, margin: '40px auto', padding: '0 24px' }}>
-      <h1 style={{ fontSize: 28, fontWeight: 800, color: '#d97706', marginBottom: 8 }}>{editId ? '✏️ Edit Pre-Booking' : '🎫 Pre-Book Ticket'}</h1>
-      <p style={{ color: '#a8a29e', marginBottom: 28, fontSize: 14 }}>{editId ? `Updating details for booking ${editId}.` : 'Reserve a seat before visiting the station. Booking valid for 5 hours.'}</p>
+    <div className="app-layout">
+      <Sidebar />
+      <main className="main-content">
+      <div style={{ maxWidth: 680, margin: '0 auto', padding: '28px 24px' }}>
+      <h1 style={{ fontSize: 22, fontWeight: 800, color: '#8B1A1A', marginBottom: 4 }}>{editId ? 'Edit Pre-Booking' : 'Pre-Book Ticket'}</h1>
+      <p style={{ color: '#8C6B6B', marginBottom: 24, fontSize: 13.5 }}>{editId ? `Updating details for booking ${editId}.` : 'Reserve a seat before visiting the station. Booking valid for 5 hours.'}</p>
 
-      {loading ? <div style={{ color: '#78716c', textAlign: 'center', padding: 60 }}>Loading...</div> : (
+      {loading ? <div style={{ color: '#8C6B6B', textAlign: 'center', padding: 60 }}>Loading...</div> : (
         <form onSubmit={handleSubmit} style={{
-          background: 'linear-gradient(135deg, rgba(68,64,60,0.85), rgba(41,37,36,0.95))',
-          border: '1px solid rgba(217,119,6,0.15)', borderRadius: 20, padding: 32,
+          background: '#FFFFFF',
+          border: '1px solid #E8E0E0', borderRadius: 10, padding: 28,
         }}>
           {error && (
             <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.4)', borderRadius: 12, padding: '12px 16px', color: '#fca5a5', fontSize: 14, marginBottom: 20 }}>
@@ -328,9 +350,9 @@ export default function PreBookPage() {
                     onClick={() => { setDirection(val as any); setTrainId(0); setFromId(0); setToId(0); setCls(''); }}
                     style={{
                       padding: '10px 16px', borderRadius: 10, cursor: 'pointer', fontWeight: 600, fontSize: 13,
-                      background: direction === val ? '#d97706' : 'rgba(217,119,6,0.08)',
-                      color: direction === val ? '#1c1917' : '#d6d3d1',
-                      border: `1px solid ${direction === val ? '#d97706' : 'rgba(217,119,6,0.2)'}`,
+                      background: direction === val ? '#8B1A1A' : 'rgba(139,26,26,0.06)',
+                      color: direction === val ? '#FFFFFF' : '#5C3D3D',
+                      border: `1px solid ${direction === val ? '#8B1A1A' : 'rgba(139,26,26,0.2)'}`,
                       transition: 'all .2s',
                     }}>
                     {lbl}
@@ -354,7 +376,7 @@ export default function PreBookPage() {
                     <label style={labelStyle}>From Station</label>
                     <select style={inputStyle} value={fromId} onChange={e => setFromId(+e.target.value)}>
                       <option value={0}>Select...</option>
-                      {availStops.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                      {availStops.filter(s => s.id !== toId).map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                     </select>
                   </div>
                   <div>
@@ -379,16 +401,16 @@ export default function PreBookPage() {
 
           {price !== null && (
             <div style={{
-              marginTop: 24, background: 'rgba(217,119,6,0.08)', borderRadius: 14, padding: 20,
-              border: '1px solid rgba(217,119,6,0.2)', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              marginTop: 24, background: 'rgba(139,26,26,0.06)', borderRadius: 14, padding: 20,
+              border: '1px solid rgba(139,26,26,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             }}>
               <div>
-                <div style={{ fontSize: 12, color: '#78716c' }}>Estimated Price</div>
-                <div style={{ fontSize: 28, fontWeight: 800, color: '#d97706' }}>{price.toFixed(2)} <span style={{ fontSize: 14 }}>EGP</span></div>
+                <div style={{ fontSize: 12, color: '#8C6B6B' }}>Estimated Price</div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: '#8B1A1A' }}>{price.toFixed(2)} <span style={{ fontSize: 14 }}>EGP</span></div>
               </div>
               <div>
-                <div style={{ fontSize: 12, color: '#78716c' }}>Priority</div>
-                <div style={{ fontWeight: 700, color: '#a8a29e', fontSize: 13 }}>
+                <div style={{ fontSize: 12, color: '#8C6B6B' }}>Priority</div>
+                <div style={{ fontWeight: 700, color: '#5C3D3D', fontSize: 13 }}>
                   ℹ️ Priority set at Station Gate on arrival
                 </div>
               </div>
@@ -396,10 +418,12 @@ export default function PreBookPage() {
           )}
 
           <button type="submit" disabled={submitting} style={{ ...goldBtn, opacity: submitting ? 0.6 : 1 }}>
-            {submitting ? 'Processing...' : (editId ? '✅ Update Pre-Booking' : '🎫 Confirm Pre-Booking')}
+            {submitting ? 'Processing...' : (editId ? 'Update Pre-Booking' : 'Confirm Pre-Booking')}
           </button>
         </form>
       )}
+      </div>
+      </main>
     </div>
   );
 }
