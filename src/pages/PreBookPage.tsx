@@ -48,7 +48,18 @@ export default function PreBookPage() {
   /* form */
   const [name, setName] = useState(localStorage.getItem('enr_user_name') || '');
   const [ssn, setSsn] = useState('');
-  const [futureDate, setFutureDate] = useState('');
+  
+  const [travelDate, setTravelDate] = useState(() => {
+    const d = new Date();
+    return d.toISOString().split('T')[0];
+  });
+  const dateOptions = [];
+  for (let i = 0; i <= 14; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+    dateOptions.push(d.toISOString().split('T')[0]);
+  }
+
   const [trainId, setTrainId] = useState<number>(0);
   const [fromId, setFromId] = useState<number>(0);
   const [toId, setToId] = useState<number>(0);
@@ -84,7 +95,10 @@ export default function PreBookPage() {
       if (editId) {
         const { data: bData } = await supabase.from('pre_bookings').select('*').eq('booking_id', editId).single();
         if (bData) {
-          setName(bData.passenger_name);
+          const rawName = bData.passenger_name || '';
+          setName(rawName.replace(/\s*_\d{4}-\d{2}-\d{2}_\s*/, ''));
+          const m = rawName.match(/_(\d{4}-\d{2}-\d{2})_/);
+          if (m) setTravelDate(m[1]);
           setSsn(bData.ssn);
           setTrainId(bData.train_id);
           setFromId(bData.from_station_id);
@@ -136,7 +150,7 @@ export default function PreBookPage() {
         : await activeBookingsQuery;
       if (activeBookings && activeBookings.length > 0) { setError('This SSN already has an active pre-booking.'); setSubmitting(false); return; }
 
-      const travelDate = 'future'; // Will be determined at Station Gate on arrival
+      const finalName = `${name} _${travelDate}_`;
       const priority = 4;          // Default — overridden at Station Gate
 
       const now = new Date();
@@ -147,7 +161,7 @@ export default function PreBookPage() {
       if (editId) {
         // UPDATE EXISTING BOOKING
         const { error: updErr } = await supabase.from('pre_bookings').update({
-          passenger_name: name,
+          passenger_name: finalName,
           train_id: trainId,
           from_station_id: fromId, to_station_id: toId,
           class_type: cls,
@@ -156,7 +170,8 @@ export default function PreBookPage() {
         if (updErr) throw updErr;
 
         await supabase.from('queue_entries').update({
-          passenger_name: name,
+          passenger_name: finalName,
+          travel_date: travelDate,
           train_id: trainId,
           from_station_id: fromId, to_station_id: toId,
           class_type: cls
@@ -175,7 +190,7 @@ export default function PreBookPage() {
 
         const { error: insErr } = await supabase.from('pre_bookings').insert({
           booking_id: bookingId,
-          ssn, passenger_name: name,
+          ssn, passenger_name: finalName,
           train_id: trainId,
           from_station_id: fromId, to_station_id: toId,
           class_type: cls,
@@ -190,7 +205,7 @@ export default function PreBookPage() {
         const nextOrder = (maxQ && maxQ.length > 0) ? maxQ[0].arrival_order + 1 : 1;
 
         await supabase.from('queue_entries').insert({
-          passenger_name: name, ssn,
+          passenger_name: finalName, ssn,
           passenger_type: 'youth',   
           travel_date: travelDate,
           priority: 4,               
@@ -276,6 +291,7 @@ export default function PreBookPage() {
             {([
               ['Booking ID', result.bookingId],
               ['Passenger', result.name],
+              ['Travel Date', travelDate],
               ['SSN', result.ssn],
               ['Train', result.trainName],
               ['Route', `${result.from} → ${result.to}`],
@@ -345,6 +361,14 @@ export default function PreBookPage() {
             <div>
               <label style={labelStyle}>National ID (SSN) — 14 digits</label>
               <input style={inputStyle} value={ssn} onChange={e => setSsn(e.target.value.replace(/\D/g, '').slice(0, 14))} placeholder="e.g. 29901011234567" maxLength={14} disabled={!!editId} />
+            </div>
+            <div>
+              <label style={labelStyle}>Travel Date</label>
+              <select style={inputStyle} value={travelDate} onChange={e => setTravelDate(e.target.value)}>
+                {dateOptions.map(d => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
             </div>
             {/* Direction Filter */}
             <div>

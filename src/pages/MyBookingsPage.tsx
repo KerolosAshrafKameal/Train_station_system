@@ -30,8 +30,8 @@ function statusBadge(status: string) {
 }
 
 export default function MyBookingsPage() {
-  const [bookings, setBookings] = useState<(PreBooking & { train_name?: string; from_name?: string; to_name?: string; ticket?: any })[]>([]);
-  const [tickets, setTickets] = useState<(Ticket & { train_name?: string; from_name?: string; to_name?: string })[]>([]);
+  const [bookings, setBookings] = useState<(PreBooking & { travel_date?: string; train_name?: string; from_name?: string; to_name?: string; ticket?: any })[]>([]);
+  const [tickets, setTickets] = useState<(Ticket & { travel_date?: string; train_name?: string; from_name?: string; to_name?: string })[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -78,10 +78,21 @@ export default function MyBookingsPage() {
           let ticketDetails = null;
           if (status === 'converted' || status === 'Abrove') {
             const { data: tkt } = await supabase.from('tickets').select('*').eq('booking_id', b.booking_id).single();
-            if (tkt) ticketDetails = tkt;
+            if (tkt) {
+                const rawTktName = tkt.passenger_name || '';
+                const m2 = rawTktName.match(/_(\d{4}-\d{2}-\d{2})_/);
+                tkt.passenger_name = rawTktName.replace(/\s*_\d{4}-\d{2}-\d{2}_\s*/, '');
+                if (m2) tkt.travel_date = m2[1];
+                ticketDetails = tkt;
+            }
           }
           
-          enrichedBookings.push({ ...b, status, train_name: train?.name, from_name: fromSt?.name, to_name: toSt?.name, ticket: ticketDetails });
+          const rawName = b.passenger_name || '';
+          const cleanName = rawName.replace(/\s*_\d{4}-\d{2}-\d{2}_\s*/, '');
+          const m = rawName.match(/_(\d{4}-\d{2}-\d{2})_/);
+          const travelDate = m ? m[1] : 'Future';
+          
+          enrichedBookings.push({ ...b, passenger_name: cleanName, travel_date: travelDate, status, train_name: train?.name, from_name: fromSt?.name, to_name: toSt?.name, ticket: ticketDetails });
         }
         setBookings(enrichedBookings);
 
@@ -98,7 +109,13 @@ export default function MyBookingsPage() {
           const { data: train } = await supabase.from('trains').select('name').eq('id', t.train_id).single();
           const { data: fromSt } = await supabase.from('stations').select('name').eq('id', t.from_station_id).single();
           const { data: toSt } = await supabase.from('stations').select('name').eq('id', t.to_station_id).single();
-          enrichedTickets.push({ ...t, train_name: train?.name, from_name: fromSt?.name, to_name: toSt?.name });
+          
+          const rawTktName = t.passenger_name || '';
+          const cleanName = rawTktName.replace(/\s*_\d{4}-\d{2}-\d{2}_\s*/, '');
+          const m = rawTktName.match(/_(\d{4}-\d{2}-\d{2})_/);
+          const travelDate = m ? m[1] : 'Unknown';
+          
+          enrichedTickets.push({ ...t, passenger_name: cleanName, travel_date: travelDate, train_name: train?.name, from_name: fromSt?.name, to_name: toSt?.name });
         }
         setTickets(enrichedTickets);
       } catch (err) {
@@ -171,6 +188,7 @@ export default function MyBookingsPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px 24px', fontSize: 13.5 }}>
                   {([
                     ['Passenger', b.passenger_name],
+                    ['Travel Date', b.travel_date],
                     ['Train', b.train_name ?? `#${b.train_id}`],
                     ['Route', `${b.from_name} → ${b.to_name}`],
                     ['Class', classLabel(b.class_type)],
@@ -238,6 +256,7 @@ export default function MyBookingsPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px 24px', fontSize: 13.5 }}>
                   {([
                     ['Passenger', t.passenger_name],
+                    ['Travel Date', t.travel_date],
                     ['Train', t.train_name ?? `#${t.train_id}`],
                     ['Route', `${t.from_name} → ${t.to_name}`],
                     ['Class', classLabel(t.class_type)],
