@@ -38,6 +38,13 @@ type Result = {
   isWaitlist: boolean;
 };
 
+function getLocalDateString(d = new Date()) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 export default function PreBookPage() {
   const [trains, setTrains] = useState<Train[]>([]);
   const [stations, setStations] = useState<Station[]>([]);
@@ -49,15 +56,12 @@ export default function PreBookPage() {
   const [name, setName] = useState(localStorage.getItem('enr_user_name') || '');
   const [ssn, setSsn] = useState('');
   
-  const [travelDate, setTravelDate] = useState(() => {
-    const d = new Date();
-    return d.toISOString().split('T')[0];
-  });
+  const [travelDate, setTravelDate] = useState(() => getLocalDateString());
   const dateOptions = [];
   for (let i = 0; i <= 14; i++) {
     const d = new Date();
     d.setDate(d.getDate() + i);
-    dateOptions.push(d.toISOString().split('T')[0]);
+    dateOptions.push(getLocalDateString(d));
   }
 
   const [trainId, setTrainId] = useState<number>(0);
@@ -156,7 +160,7 @@ export default function PreBookPage() {
       const now = new Date();
       const expiresAt = new Date(now.getTime() + 5 * 60 * 60 * 1000);
 
-      const todayStr = new Date().toISOString().split('T')[0];
+      const todayStr = getLocalDateString();
       const queueTravelDate = (travelDate === todayStr) ? 'today' : 'future';
 
       let bookingId = editId || '';
