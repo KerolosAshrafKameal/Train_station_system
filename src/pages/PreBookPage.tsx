@@ -156,6 +156,9 @@ export default function PreBookPage() {
       const now = new Date();
       const expiresAt = new Date(now.getTime() + 5 * 60 * 60 * 1000);
 
+      const todayStr = new Date().toISOString().split('T')[0];
+      const queueTravelDate = (travelDate === todayStr) ? 'today' : 'future';
+
       let bookingId = editId || '';
 
       if (editId) {
@@ -171,7 +174,7 @@ export default function PreBookPage() {
 
         await supabase.from('queue_entries').update({
           passenger_name: finalName,
-          travel_date: travelDate,
+          travel_date: queueTravelDate,
           train_id: trainId,
           from_station_id: fromId, to_station_id: toId,
           class_type: cls
@@ -207,7 +210,7 @@ export default function PreBookPage() {
         await supabase.from('queue_entries').insert({
           passenger_name: finalName, ssn,
           passenger_type: 'youth',   
-          travel_date: travelDate,
+          travel_date: queueTravelDate,
           priority: 4,               
           arrival_order: nextOrder,
           queue_type: 'prebook',
